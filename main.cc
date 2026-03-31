@@ -25,7 +25,12 @@ struct cpu {
         union {
             struct {
                 byte A; // 100
-                byte FLAGS; // 101
+                struct {
+                    byte S: 1;
+                    byte Z: 1;
+                    byte P: 1;
+                    byte AC: 1;
+                } // 101
             };
             word PSW;
         };
@@ -96,7 +101,16 @@ struct cpu {
     byte memory[1024];
 
     void parse();
+    void zspca(byte in);
 };
+
+void zspca(byte in)
+{
+    rgf.S = GetBit(in, 7) == 1;
+    rgf.Z = in == 0;
+    rgf.P = GetBit(in, 0);
+    rgf.AC |= GetBit(in, 3);
+}
 
 byte bitrange(byte in, byte start, byte end)
 {
@@ -161,7 +175,7 @@ void cpu::parse()
             rgf.DE = HL;
         //  ADD S     10000SSS          ZSPCA   Add register to A
         case ADD:
-
+            zspca(rgf.A + resolve(bitrange(opcode, 5, 7)));
         //  ADI #     11000110 db       ZSCPA   Add immediate to A
         case ADI:
         //  ADC S     10001SSS          ZSCPA   Add register to A with carry
