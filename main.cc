@@ -30,7 +30,7 @@ struct cpu {
                     byte Z: 1;
                     byte P: 1;
                     byte AC: 1;
-                } // 101
+                }; // 101
             };
             word PSW;
         };
