@@ -101,15 +101,17 @@ struct cpu {
     byte memory[1024];
 
     void parse();
-    void zspca(byte in);
+    byte zspca(byte before, byte after);
 };
 
-void zspca(byte in)
+byte cpu::zspca(byte before, byte after)
 {
-    rgf.S = GetBit(in, 7) == 1;
-    rgf.Z = in == 0;
-    rgf.P = GetBit(in, 0);
-    rgf.AC |= GetBit(in, 3);
+    rgf.S = GetBit(after, 7) == 1;
+    rgf.Z = after == 0;
+    rgf.P = GetBit(after, 0);
+    rgf.AC |= GetBit(after, 3);
+
+    return after;
 }
 
 byte bitrange(byte in, byte start, byte end)
@@ -175,9 +177,10 @@ void cpu::parse()
             rgf.DE = HL;
         //  ADD S     10000SSS          ZSPCA   Add register to A
         case ADD:
-            zspca(rgf.A + resolve(bitrange(opcode, 5, 7)));
+            rgf.A = zspca(rgf.A, rgf.A + resolve(bitrange(opcode, 5, 7)));
         //  ADI #     11000110 db       ZSCPA   Add immediate to A
         case ADI:
+            zspca(rgf.A + resolve(bitrange(opcode, 5, 7)));
         //  ADC S     10001SSS          ZSCPA   Add register to A with carry
         case ADC:
         //  ACI #     11001110 db       ZSCPA   Add immediate to A with carry
