@@ -1,5 +1,8 @@
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <cstdarg>
+#include <algorithm>
 
 #define GetBit(N, K) \
  ((N >> K) & 1)
@@ -20,6 +23,7 @@ typedef uint16_t word;
 
 struct cpu {
     struct registers {
+        word SP;
         word PC;
 
         union {
@@ -84,7 +88,7 @@ struct cpu {
         }
     }
 
-    byte &resolve_rp(byte in)
+    word &resolve_rp(byte in, bool is_PP = false)
     {
         switch (in)
         {
@@ -95,13 +99,15 @@ struct cpu {
         case 0b10:
             return rgf.HL; // (H:L as 16 bit register)
         case 0b11:
-            return rgf.SP; // (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
+            return is_PP? rgf.PSW : rgf.SP; // (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
         }
     }
     byte memory[1024];
 
     void parse();
     byte zspca(byte before, byte after);
+    void dump_registers();
+    void dump_memory();
 };
 
 byte cpu::zspca(byte before, byte after)
@@ -135,6 +141,50 @@ union tword {
 word weld_lh(byte lo, byte hi)
 {
     return tword{lo, hi}.w;
+}
+
+void cpu::dump_registers()
+{
+    printf("\n\
+A(%3d) %8b\t\n\
+B(%3d) %8b\nC(%3d) %8b\t==> BC(%5d) %16b\n\
+D(%3d) %8b\nE(%3d) %8b\t==> DE(%5d) %16b\n\
+H(%3d) %8b\nL(%3d) %8b\t==> HL(%5d) %16b\n\
+PC: %5d\tPSW %5d\n\
+%b %b %b %b\n\
+Z S P C A\n",
+rgf.A,
+rgf.B, rgf.C,
+rgf.D, rgf.E,
+rgf.H, rgf.L,
+rgf.PC, rgf.PSW,
+rgf.Z, rgf.S, rgf.P, rgf.C, rgf.A);
+}
+
+void cpu::dump_memory()
+{
+    auto lowbound = std::clamp(rgf.PC - 5, 0, 1024);
+    auto upbound = std::clamp(rgf.PC - 5, 0, 1024);
+
+    for (int i = lowbound; i < upbound; ++i)
+    {
+        printf("%*c%*c%#x%*c%*c",
+            (i == lowbound)? 0 : 1, ' ',
+            (i == rgf.PC)? 1 : 0, '[',
+            memory[i],
+            (i == rgf.PC)? 1 : 0, ']',
+            (i == upbound - 1)? 0 : 1, ' ' );
+    }
+}
+
+[[noreturn]] void panic(cpu c, std::string fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+        vprintf(fmt.c_str(), va);
+    va_end(va);
+
+    c.dump_registers();
+    c.dump_memory();
 }
 
 void cpu::parse()
@@ -180,11 +230,14 @@ void cpu::parse()
             rgf.A = zspca(rgf.A, rgf.A + resolve(bitrange(opcode, 5, 7)));
         //  ADI #     11000110 db       ZSCPA   Add immediate to A
         case ADI:
-            zspca(rgf.A + resolve(bitrange(opcode, 5, 7)));
+            rgf.A = zspca(rgf.A, rgf.A + memory[rgf.PC++]);
         //  ADC S     10001SSS          ZSCPA   Add register to A with carry
         case ADC:
+            rgf.A = zspca(rgf.A, rgf.A + resolve(bitrange(opcode, 5, 7)) + rgf.C);
         //  ACI #     11001110 db       ZSCPA   Add immediate to A with carry
         case ACI:
+            rgf.A = zspca(rgf.A, rgf.A + memory[rgf.PC++] + rgf.C);
+
         //  SUB S     10010SSS          ZSCPA   Subtract register from A
         case SUB:
         //  SUI #     11010110 db       ZSCPA   Subtract immediate from A
@@ -193,6 +246,7 @@ void cpu::parse()
         case SBB:
         //  SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
         case SBI:
+            panic(*this, "[SUB] Unimplemented");
         //  INR D     00DDD100          ZSPA    Increment register
         case INR:
         //  DCR D     00DDD101          ZSPA    Decrement register
