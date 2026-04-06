@@ -1,117 +1,20 @@
-#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <cstdarg>
 #include <algorithm>
 
-#define GetBit(N, K) \
- ((N >> K) & 1)
-#define SetBit(N, K) \
- (N = N | (1 << K))
-#define ClearBit(N, K) \
- (N = N & ~(1 << K))
-#define ToggleBit(N, K) \
- (N = N ^ (1 << K))
-#define ModBit(N, K) \
- (N = N | (P << K))
+struct cpu;
+
 
 enum opcodes {
 MOV, MVI, LXI, LDA, STA, LHLD, SHLD, LDAX, STAX, XCHG, ADD, ADI, ADC, ACI, SUB, SUI, SBB, SBI, INR, DCR, INX, DCX, DAD, DAA, ANA, ANI, ORA, ORI, XRA, XRI, CMP, CPI, RLC, RRC, RAL, RAR, CMA, CMC, STC, JMP, Jccc, CALL, Cccc, RET, Rccc, RST, PCHL, PUSH, POP, XTHL, SPHL, IN, OUT, EI, DI, HLT, NOP, };
 
 typedef uint8_t byte;
-typedef uint16_t word;
 
-struct cpu {
-    struct registers {
-        word SP;
-        word PC;
-
-        union {
-            struct {
-                byte A; // 100
-                struct {
-                    byte S: 1;
-                    byte Z: 1;
-                    byte P: 1;
-                    byte AC: 1;
-                }; // 101
-            };
-            word PSW;
-        };
-
-        union {
-            struct {
-                byte D; // 100
-                byte E; // 101
-            };
-            word DE;
-        };
-
-        union {
-            struct {
-                byte B; // 100
-                byte C; // 101
-            };
-            word BC;
-        };
-
-        union {
-            struct {
-                byte H; // 100
-                byte L; // 101
-            };
-            word HL;
-        };
-
-    } rgf;
-
-    byte &resolve(byte in)
-    {
-        switch (in)
-        {
-        case 0b111:
-            return rgf.A;
-        case 0b000:
-            return rgf.B;
-        case 0b001:
-            return rgf.C;
-        case 0b010:
-            return rgf.D;
-        case 0b011:
-            return rgf.E;
-        case 0b100:
-            return rgf.H;
-        case 0b101:
-            return rgf.L;
-        case 0b110:
-            return memory[rgf.HL];
-        }
-    }
-
-    word &resolve_rp(byte in, bool is_PP = false)
-    {
-        switch (in)
-        {
-        case 0b00:
-            return rgf.BC; // (B:C as 16 bit register)
-        case 0b01:
-            return rgf.DE; // (D:E as 16 bit register)
-        case 0b10:
-            return rgf.HL; // (H:L as 16 bit register)
-        case 0b11:
-            return is_PP? rgf.PSW : rgf.SP; // (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
-        }
-    }
-    byte memory[1024];
-
-    void parse();
-    byte zspca(byte before, byte after);
-    void dump_registers();
-    void dump_memory();
-};
 
 byte cpu::zspca(byte before, byte after)
 {
+    (void) (before);
     rgf.S = GetBit(after, 7) == 1;
     rgf.Z = after == 0;
     rgf.P = GetBit(after, 0);
@@ -128,6 +31,8 @@ byte bitrange(byte in, byte start, byte end)
         if (GetBit(in, i))
             SetBit(out, i);
     }
+
+    return out;
 }
 
 union tword {
@@ -140,104 +45,76 @@ union tword {
 
 word weld_lh(byte lo, byte hi)
 {
-    return tword{lo, hi}.w;
+    return tword{{lo, hi}}.w;
 }
 
-void cpu::dump_registers()
-{
-    printf("\n\
-A(%3d) %8b\t\n\
-B(%3d) %8b\nC(%3d) %8b\t==> BC(%5d) %16b\n\
-D(%3d) %8b\nE(%3d) %8b\t==> DE(%5d) %16b\n\
-H(%3d) %8b\nL(%3d) %8b\t==> HL(%5d) %16b\n\
-PC: %5d\tPSW %5d\n\
-%b %b %b %b\n\
-Z S P C A\n",
-rgf.A,
-rgf.B, rgf.C,
-rgf.D, rgf.E,
-rgf.H, rgf.L,
-rgf.PC, rgf.PSW,
-rgf.Z, rgf.S, rgf.P, rgf.C, rgf.A);
-}
-
-void cpu::dump_memory()
-{
-    auto lowbound = std::clamp(rgf.PC - 5, 0, 1024);
-    auto upbound = std::clamp(rgf.PC - 5, 0, 1024);
-
-    for (int i = lowbound; i < upbound; ++i)
-    {
-        printf("%*c%*c%#x%*c%*c",
-            (i == lowbound)? 0 : 1, ' ',
-            (i == rgf.PC)? 1 : 0, '[',
-            memory[i],
-            (i == rgf.PC)? 1 : 0, ']',
-            (i == upbound - 1)? 0 : 1, ' ' );
-    }
-}
-
-[[noreturn]] void panic(cpu c, std::string fmt, ...) {
-    va_list va;
-    va_start(va, fmt);
-        vprintf(fmt.c_str(), va);
-    va_end(va);
-
-    c.dump_registers();
-    c.dump_memory();
-}
-
-void cpu::parse()
+void cpu::tick()
 {
     byte opcode = memory[rgf.PC++];
     switch (opcode)
     {
-        //  MOV D,S   01DDDSSS          -       Move register to register
+    break;
+    //  MOV D,S   01DDDSSS          -       Move register to register
         case MOV:
             resolve(bitrange(opcode, 2, 4)) = resolve(bitrange(opcode, 5, 7));
+        break;
         //  MVI D,#   00DDD110 db       -       Move immediate to register
         case MVI:
             resolve(bitrange(opcode, 2, 4)) = memory[rgf.PC++];
+        break;
         //  LXI RP,#  00RP0001 lb hb    -       Load register pair immediate
         case LXI:
             resolve_rp(bitrange(opcode, 2, 3)) = weld_lh(memory[rgf.PC++], memory[rgf.PC++]);
+        break;
         //  LDA a     00111010 lb hb    -       Load A from memory
         case LDA:
             rgf.A = memory[weld_lh(memory[rgf.PC++], memory[rgf.PC++])];
+        break;
         //  STA a     00110010 lb hb    -       Store A to memory
         case STA:
             memory[weld_lh(memory[rgf.PC++], memory[rgf.PC++])] = rgf.A;
+        break;
         //  LHLD a    00101010 lb hb    -       Load H:L from memory
         case LHLD:
             rgf.HL = weld_lh(memory[rgf.PC++], memory[rgf.PC++]);
+        break;
         //  SHLD a    00100010 lb hb    -       Store H:L to memory
         case SHLD:
             memory[memory[rgf.PC++]] = rgf.H;
             memory[memory[rgf.PC++]] = rgf.L;
+        break;
         //  LDAX RP   00RP1010 *1       -       Load indirect through BC or DE
         case LDAX:
             rgf.A = memory[resolve_rp(bitrange(opcode, 2, 3))];
+        break;
         //  STAX RP   00RP0010 *1       -       Store indirect through BC or DE
         case STAX:
             memory[resolve_rp(bitrange(opcode, 2, 3))] = rgf.A;
+        break;
         //  XCHG      11101011          -       Exchange DE and HL content
         case XCHG:
+        {
             byte HL = rgf.HL;
             rgf.HL = rgf.DE;
             rgf.DE = HL;
+        }
+        break;
         //  ADD S     10000SSS          ZSPCA   Add register to A
         case ADD:
             rgf.A = zspca(rgf.A, rgf.A + resolve(bitrange(opcode, 5, 7)));
+        break;
         //  ADI #     11000110 db       ZSCPA   Add immediate to A
         case ADI:
             rgf.A = zspca(rgf.A, rgf.A + memory[rgf.PC++]);
+        break;
         //  ADC S     10001SSS          ZSCPA   Add register to A with carry
         case ADC:
             rgf.A = zspca(rgf.A, rgf.A + resolve(bitrange(opcode, 5, 7)) + rgf.C);
+        break;
         //  ACI #     11001110 db       ZSCPA   Add immediate to A with carry
         case ACI:
             rgf.A = zspca(rgf.A, rgf.A + memory[rgf.PC++] + rgf.C);
-
+        break;
         //  SUB S     10010SSS          ZSCPA   Subtract register from A
         case SUB:
         //  SUI #     11010110 db       ZSCPA   Subtract immediate from A
@@ -246,7 +123,6 @@ void cpu::parse()
         case SBB:
         //  SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
         case SBI:
-            panic(*this, "[SUB] Unimplemented");
         //  INR D     00DDD100          ZSPA    Increment register
         case INR:
         //  DCR D     00DDD101          ZSPA    Decrement register
@@ -325,5 +201,13 @@ void cpu::parse()
         case HLT:
         //  NOP       00000000          -       No operation
         case NOP:
+        panic(*this, "Unimplemented");
     }
+}
+
+int main()
+{
+    cpu c;
+    c.memory[0x0] = XTHL;
+    c.tick();
 }
