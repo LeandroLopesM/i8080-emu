@@ -27,4 +27,19 @@ inline T clamp(T a, T lo, T hi)
     return a <= lo? lo : a >= hi? hi : a;
 }
 
+static word mkword(byte lo, byte hi)
+{
+    union {
+        struct {
+            byte l;
+            byte h;
+        } as_bytes;
+        word asword;
+    } out {
+        {lo, hi}
+    };
+
+    return out.asword;
+}
+
 #endif // BYTEDEF_HPP

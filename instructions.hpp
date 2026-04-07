@@ -2,7 +2,7 @@
 #define INSTRUCTION_HPP
 
 #include "common.hpp"
-#include <variant>
+#include <utility>
 
 enum  InstructionKind {
     MOV , MVI , LXI , LDA ,
@@ -22,21 +22,15 @@ enum  InstructionKind {
     NOP ,
 };
 
+template<typename A,typename B>
 struct Instruction {
     InstructionKind type;
-    std::variant<byte, word>* lhs;
-    std::variant<byte, word>* rhs;
+    std::pair<A, B> ops;
 
-    Instruction() = default;
     Instruction(Instruction& i) = default;
-
     Instruction(InstructionKind type,
-                std::variant<byte, word>* lhs,
-                std::variant<byte, word>* rhs) {
-        this->type = type;
-        this->lhs = lhs;
-        this->rhs = rhs;
-    };
+        std::pair<A, B> ops) : type(type), ops(ops) {}
+
 };
 
 #endif // INSTRUCTION_HPP

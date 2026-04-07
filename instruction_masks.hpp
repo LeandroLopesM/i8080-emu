@@ -8,12 +8,13 @@
 #   define m_MVI_DST                 0b00111000
 #define m_LXI  0b00000001 // LXI RP,#  00RP0001 lb hb    -       Load register pair immediate
 #   define m_LXI_DST                 0b00110000
-#define m_LDA  0b00111010
-#define m_STA  0b00110010
-#define m_LHLD 0b00101010
-#define m_SHLD 0b00100010
-#define m_LDAX 0b00001010
-#define m_STAX 0b00000010
+#define m_LDA  0b00111010 // LDA a     00111010 lb hb    -       Load A from memory
+#define m_STA  0b00110010 // STA a     00110010 lb hb    -       Store A to memory
+#define m_LHLD 0b00101010 // LHLD a    00101010 lb hb    -       Load H:L from memory
+#define m_SHLD 0b00100010 // SHLD a    00100010 lb hb    -       Store H:L to memory
+#define m_LDAX 0b00001010 // LDAX RP   00RP1010 *1       -       Load indirect through BC or DE
+#   define m_LDAX_SRC                0b00110000
+#define m_STAX 0b00000010 // XCHG      11101011          -       Exchange DE and HL content
 #define m_XCHG 0b11101011
 #define m_ADD  0b10000000
 #define m_ADI  0b11000110
