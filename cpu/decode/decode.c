@@ -97,12 +97,12 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_LDAX)) {
         out->kind = LDAX;
-        out->opA = resolve_rp(c, (opcode & DF_RP_MASK) << 2);
+        out->opA = resolve_rp_xx(c, (opcode & DF_RP_MASK) << 2);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_STAX)) {
         out->kind = STAX;
-        out->opA = resolve_rp(c, (opcode & DF_RP_MASK) << 2);
+        out->opA = resolve_rp_xx(c, (opcode & DF_RP_MASK) << 2);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_XCHG)) {
