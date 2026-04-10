@@ -14,16 +14,20 @@
 #define m_SHLD 0b00100010 // SHLD a    00100010 lb hb    -       Store H:L to memory
 #define m_LDAX 0b00001010 // LDAX RP   00RP1010 *1       -       Load indirect through BC or DE
 #   define m_LDAX_SRC                0b00110000
-#define m_STAX 0b00000010 // XCHG      11101011          -       Exchange DE and HL content
-#define m_XCHG 0b11101011
-#define m_ADD  0b10000000
-#define m_ADI  0b11000110
-#define m_ADC  0b10001000
-#define m_ACI  0b11001110
-#define m_SUB  0b10010000
-#define m_SUI  0b11010110
-#define m_SBB  0b10011000
-#define m_SBI  0b11011110
+#define m_STAX 0b00000010 // STAX RP   00RP0010 *1       -       Store indirect through BC or DE
+#define m_XCHG 0b11101011 // XCHG      11101011          -       Exchange DE and HL content
+#define m_ADD  0b10000000 // ADD S     10000SSS          ZSPCA   Add register to A
+#   define m_ADD_SRC                 0b00000111
+#define m_ADI  0b11000110 // ADI #     11000110 db       ZSCPA   Add immediate to A
+#define m_ADC  0b10001000 // ADC S     10001SSS          ZSCPA   Add register to A with carry
+#   define m_ADC_SRC                 0b00000111
+#define m_ACI  0b11001110 // ACI #     11001110 db       ZSCPA   Add immediate to A with carry
+#define m_SUB  0b10010000 // SUB S     10010SSS          ZSCPA   Subtract register from A
+#   define m_SUB_SRC                 0b00000111
+#define m_SUI  0b11010110 // SUI #     11010110 db       ZSCPA   Subtract immediate from A
+#define m_SBB  0b10011000 // SBB S     10011SSS          ZSCPA   Subtract register from A with borrow
+#   define m_SBB_SRC                 0b00000111
+#define m_SBI  0b11011110 // SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
 #define m_INR  0b00000100
 #define m_DCR  0b00000101
 #define m_INX  0b00000011
