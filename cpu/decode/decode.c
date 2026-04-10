@@ -258,21 +258,21 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     else if (BITMASK(opcode, m_JMP)) {
         out->kind = JMP;
         out->opA = &c->memory[(*truepos)++];
-        out->opB = NULL;
+        out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_Jccc)) {
         out->kind = Jccc;
-        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
+        out->opA = resolve_condition(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_CALL)) {
         out->kind = CALL;
         out->opA = &c->memory[(*truepos)++];
-        out->opB = NULL;
+        out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_Cccc)) {
         out->kind = Cccc;
-        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
+        out->opA = resolve_condition(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_RET)) {
@@ -282,7 +282,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_Rccc)) {
         out->kind = Rccc;
-        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
+        out->opA = resolve_condition(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_RST)) {
