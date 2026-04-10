@@ -62,17 +62,17 @@ instruction *decode(cpu* c, int mempos, size_t tick)
 
     if (BITMASK(opcode, m_MOV)) {
         out->kind = MOV;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 2);
-        out->opB = resolve(c, (opcode & m_MOV_SRC) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 2);
+        out->opB = resolve(c, (opcode & DF_REG_MASK) << 5);
     }
     else if (BITMASK(opcode, m_MVI)) {
         out->kind = MVI;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_LXI)) {
         out->kind = LXI;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_LDA)) {
@@ -112,7 +112,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_ADD)) {
         out->kind = ADD;
-        out->opA = resolve(c, (opcode & m_ADD_SRC) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 5);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_ADI)) {
@@ -122,7 +122,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_ADC)) {
         out->kind = ADC;
-        out->opA = resolve(c, (opcode & m_ADC_SRC) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 5);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_ACI)) {
@@ -132,7 +132,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_SUB)) {
         out->kind = SUB;
-        out->opA = resolve(c, (opcode & m_SUB_SRC) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 5);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_SUI)) {
@@ -142,7 +142,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_SBB)) {
         out->kind = SBB;
-        out->opA = resolve(c, (opcode & m_SBB_SRC) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 5);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_SBI)) {
@@ -152,12 +152,12 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_INR)) {
         out->kind = INR;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 2);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_DCR)) {
         out->kind = DCR;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 2);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_INX)) {
@@ -212,7 +212,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_CMP)) {
         out->kind = CMP;
-        out->opA = resolve(c, (opcode & DF_DEST_MASK) << 5);
+        out->opA = resolve(c, (opcode & DF_REG_MASK) << 5);
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_CPI)) {
@@ -220,7 +220,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_RLC)) {
+    else if (BITMASK(opcode, DF_REG_MASK)) {
         out->kind = RLC;
         out->opA = NULL;
         out->opB = NULL;
@@ -262,7 +262,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_Jccc)) {
         out->kind = Jccc;
-        out->opA = resolve_flag(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_CALL)) {
@@ -272,7 +272,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_Cccc)) {
         out->kind = Cccc;
-        out->opA = resolve_flag(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_RET)) {
@@ -282,7 +282,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     }
     else if (BITMASK(opcode, m_Rccc)) {
         out->kind = Rccc;
-        out->opA = resolve_flag(c, (opcode & DF_DEST_MASK) << 2);
+        out->opA = resolve_flag(c, (opcode & DF_REG_MASK) << 2);
         out->opB = &c->memory[(*truepos)++];
     }
     else if (BITMASK(opcode, m_RST)) {

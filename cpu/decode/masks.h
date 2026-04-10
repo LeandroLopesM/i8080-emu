@@ -1,11 +1,10 @@
 #ifndef MASKS_HPP
 #define MASKS_HPP
 
-#define DF_DEST_MASK 0b00111000
+#define DF_REG_MASK 0b00111000
 #define DF_RP_MASK 0b00110000
 
 #define m_MOV  0b01000000 // MOV D,S   01DDDSSS          -       Move register to register
-#   define m_MOV_SRC                 0b00000111
 #define m_MVI  0b00000110 // MVI D,#   00DDD110 db       -       Move immediate to register
 #define m_LXI  0b00000001 // LXI RP,#  00RP0001 lb hb    -       Load register pair immediate
 #define m_LDA  0b00111010 // LDA a     00111010 lb hb    -       Load A from memory
@@ -16,16 +15,12 @@
 #define m_STAX 0b00000010 // STAX RP   00RP0010 *1       -       Store indirect through BC or DE
 #define m_XCHG 0b11101011 // XCHG      11101011          -       Exchange DE and HL content
 #define m_ADD  0b10000000 // ADD S     10000SSS          ZSPCA   Add register to A
-#   define m_ADD_SRC                 0b00000111
 #define m_ADI  0b11000110 // ADI #     11000110 db       ZSCPA   Add immediate to A
 #define m_ADC  0b10001000 // ADC S     10001SSS          ZSCPA   Add register to A with carry
-#   define m_ADC_SRC                 0b00000111
 #define m_ACI  0b11001110 // ACI #     11001110 db       ZSCPA   Add immediate to A with carry
 #define m_SUB  0b10010000 // SUB S     10010SSS          ZSCPA   Subtract register from A
-#   define m_SUB_SRC                 0b00000111
 #define m_SUI  0b11010110 // SUI #     11010110 db       ZSCPA   Subtract immediate from A
 #define m_SBB  0b10011000 // SBB S     10011SSS          ZSCPA   Subtract register from A with borrow
-#   define m_SBB_SRC                 0b00000111
 #define m_SBI  0b11011110 // SBI #     11011110 db       ZSCPA   Subtract immediate from A with borrow
 #define m_INR  0b00000100 // INR D     00DDD100          ZSPA    Increment register
 #define m_DCR  0b00000101 // DCR D     00DDD101          ZSPA    Decrement register
@@ -41,7 +36,6 @@
 #define m_XRI  0b11101110
 #define m_CMP  0b10111000
 #define m_CPI  0b11111110
-#define m_RLC  0b00000111
 #define m_RRC  0b00001111
 #define m_RAL  0b00010111
 #define m_RAR  0b00011111
