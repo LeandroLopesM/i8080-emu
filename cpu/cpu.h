@@ -1,6 +1,6 @@
 #ifndef CPU_H
 #define CPU_H
-#include "../common.h"
+#include "../core/common.h"
 
 struct Registers {
     word SP;
