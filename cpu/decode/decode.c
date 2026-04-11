@@ -73,26 +73,26 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     else if (BITMASK(opcode, m_LXI)) {
         out->kind = LXI;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) << 2));
-        out->opB = &c->memory[(*truepos)++];
+        out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
     else if (BITMASK(opcode, m_LDA)) {
         out->kind = LDA;
-        out->opA = &c->memory[(*truepos)++];
+        out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_STA)) {
         out->kind = STA;
-        out->opA = &c->memory[(*truepos)++];
+        out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_LHLD)) {
         out->kind = LHLD;
-        out->opA = &c->memory[(*truepos)++];
+        out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_SHLD)) {
         out->kind = SHLD;
-        out->opA = &c->memory[(*truepos)++];
+        out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
     else if (BITMASK(opcode, m_LDAX)) {
@@ -263,7 +263,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     else if (BITMASK(opcode, m_Jccc)) {
         out->kind = Jccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) << 2));
-        out->opB = &c->memory[(*truepos)++];
+        out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
     else if (BITMASK(opcode, m_CALL)) {
         out->kind = CALL;
@@ -273,7 +273,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     else if (BITMASK(opcode, m_Cccc)) {
         out->kind = Cccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) << 2));
-        out->opB = &c->memory[(*truepos)++];
+        out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
     else if (BITMASK(opcode, m_RET)) {
         out->kind = RET;
@@ -283,7 +283,7 @@ instruction *decode(cpu* c, int mempos, size_t tick)
     else if (BITMASK(opcode, m_Rccc)) {
         out->kind = Rccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) << 2));
-        out->opB = &c->memory[(*truepos)++];
+        out->opB = NULL;
     }
     else if (BITMASK(opcode, m_RST)) {
         panic_ext(c, "RST: Not sure what this is supposed to be");
