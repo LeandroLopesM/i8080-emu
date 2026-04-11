@@ -44,14 +44,6 @@ const char* idx_tostr(size_t idx)
 
 instruction *decode(cpu* c, int mempos, size_t tick)
 {
-    word* truepos = mempos == -1? &c->rgf.PC : (word*)(&mempos);
-    opcode = c->memory[(*truepos)++];
-
-    if (out->opcode == opcode)
-        return out;
-
-    out->opcode = opcode;
-
     if (out == NULL)
     {
         if (tick != 0)
@@ -59,6 +51,14 @@ instruction *decode(cpu* c, int mempos, size_t tick)
 
         out = calloc(1, sizeof (instruction));
     }
+
+    word* truepos = mempos == -1? &c->rgf.PC : (word*)(&mempos);
+    opcode = c->memory[(*truepos)++];
+
+    if (out->opcode == opcode)
+        return out;
+
+    out->opcode = opcode;
 
     if (BITMASK(opcode, m_MOV)) {
         out->kind = MOV;
