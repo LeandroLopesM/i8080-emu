@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra
+CFLAGS+=-Wall -Wextra
 
 test.exe: test.c cpu/cpu.o core/core.o
 	$(CC) $(CFLAGS) test.c -o test cpu/cpu.o core/core.o
