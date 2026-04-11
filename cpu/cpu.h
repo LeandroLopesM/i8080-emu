@@ -1,6 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 #include "../core/common.h"
+#include "decode/instruction.h"
 
 typedef enum {
     NZ, // ('Z'ero flag not set)
@@ -59,7 +60,9 @@ struct registers {
 
 typedef struct {
     struct registers rgf;
-    byte memory[65536];
+    byte memory[UINT16_MAX];
 } cpu;
+
+void exec(cpu* c, instruction* i);
 
 #endif // CPU_H

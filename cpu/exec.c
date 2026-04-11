@@ -11,7 +11,7 @@
     (((t_word){{hi, lo}}).asword)
 
 #define MKWORD_INPLACE(lo) \
-    (((t_word){{*( lo + 1), *lo}}).asword)
+    (((t_word){{*(++lo), *lo - 1}}).asword)
 
 void exec(cpu* c, instruction* i)
 {
@@ -29,6 +29,7 @@ void exec(cpu* c, instruction* i)
             break;
         case STA:
             *i->opA = c->rgf.A;
+            break;
         case LHLD:
             c->rgf.HL = WORD(i->opA);
             break;
@@ -168,8 +169,10 @@ void exec(cpu* c, instruction* i)
             panic_ext(c, "Unimplemented");
         case EI:
             c->rgf.I = 1;
+            break;
         case DI:
             c->rgf.I = 0;
+            break;
         case HLT:
         {
             static int hltd = 0;
