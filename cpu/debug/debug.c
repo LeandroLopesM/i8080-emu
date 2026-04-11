@@ -24,7 +24,7 @@ int clamp(int a, int b, int c)
 
 void dump_memory(cpu* c)
 {
-    printf("Memory dump:\n");
+    printf("+ Memory dump (%X:%X): { ", clamp(c->rgf.PC, 0, UINT16_MAX), clamp(c->rgf.PC + 5, 0, UINT16_MAX));
     for (int i = clamp(c->rgf.PC, 0, UINT16_MAX); i < clamp(c->rgf.PC + 5, 0, UINT16_MAX); ++i)
     {
         if (i == c->rgf.PC)
@@ -32,6 +32,6 @@ void dump_memory(cpu* c)
         else
             printf("%2X ", c->memory[i]);
     }
-
+    printf("};\n");
     fflush(stdout);
 }

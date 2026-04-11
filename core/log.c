@@ -44,8 +44,9 @@ static void __panic(int die, const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    printf("Processor panicked.");
+    printf("Processor panicked!\n");
     vprintf(fmt, va);
+    printf("\n");
     va_end(va);
 
     if (die) abort();
@@ -65,7 +66,6 @@ void panic_ext(cpu *c, const char* fmt, ...)
     va_start(va, fmt);
     __panic(0, fmt, va);
     va_end(va);
-
     dump_registers(c);
     dump_memory(c);
     dump_decoder();

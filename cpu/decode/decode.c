@@ -27,13 +27,13 @@ static char atlas[][5] = {
 
 void dump_decoder()
 {
-    printf("DECODER BUFFER DUMP>>\n");
+    printf("+ Dump decoder pipes:\n");
     if (out == NULL)
-        printf(" > Null (No instruction decoded)\n");
+        printf("!! Null (No instruction decoded)\n");
     else {
-        printf(" > IDX(%3d): %s\n", out->kind, atlas[out->kind]);
-        printf(" > A(%p), B(%p)\n", out->opA, out->opB);
-        printf(" > %d\n", opcode);
+        printf("| > %s <\n", atlas[out->kind]);
+        printf("| A: %-2X B: %-2X\n", *out->opA, *out->opB);
+        printf("| Opcode:   %d\n", opcode);
     }
 }
 
