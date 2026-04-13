@@ -1,17 +1,17 @@
-CPU_SOURCES = 	\
-	cpu/decode/resolve.o	\
-	cpu/debug/debug.o		\
-	cpu/decode/decode.o		\
-	cpu/exec.o				\
+SOURCES = 				\
+	$(OBJDIR)/resolve.o	\
+	$(OBJDIR)debug.o	\
+	$(OBJDIR)/decode.o	\
+	$(OBJDIR)/exec.o	\
 
-cpu/cpu.o: $(CPU_SOURCES)
-	ld $(CPU_SOURCES) --relocatable -o cpu/cpu.o
+cpu/cpu.o: $(SOURCES) $(OBJDIR)
+	ld $(SOURCES) --relocatable -o $(OBJDIR)/cpu.o
 
-cpu/decode/resolve.o: cpu/decode/resolve.c
-	$(CC) cpu/decode/resolve.c -c -o cpu/decode/resolve.o $(CFLAGS)
-cpu/debug/debug.o: cpu/debug/debug.c
-	$(CC) cpu/debug/debug.c -c -o cpu/debug/debug.o $(CFLAGS)
-cpu/decode/decode.o: cpu/decode/decode.c
-	$(CC) cpu/decode/decode.c -c -o cpu/decode/decode.o $(CFLAGS)
-cpu/exec.o: cpu/exec.c
-	$(CC) cpu/exec.c -c -o cpu/exec.o  $(CFLAGS) -Wno-implicit-fallthrough
+$(OBJDIR)/resolve.o: cpu/decode/resolve.c $(OBJDIR)
+	$(CC) cpu/decode/resolve.c -c -o $(OBJDIR)/resolve.o $(CFLAGS)
+$(OBJDIR)debug.o: cpu/debug/debug.c $(OBJDIR)
+	$(CC) cpu/debug/debug.c -c -o $(OBJDIR)debug.o $(CFLAGS)
+$(OBJDIR)/decode.o: cpu/decode/decode.c $(OBJDIR)
+	$(CC) cpu/decode/decode.c -c -o $(OBJDIR)/decode.o $(CFLAGS)
+$(OBJDIR)/exec.o: cpu/exec.c $(OBJDIR)
+	$(CC) cpu/exec.c -c -o $(OBJDIR)/exec.o  $(CFLAGS) -Wno-implicit-fallthrough

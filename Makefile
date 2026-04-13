@@ -1,8 +1,13 @@
 CC=gcc
-CFLAGS+=-Wall -Wextra
+CFLAGS+= -Wall -Wextra
 
-test.exe: test.c cpu/cpu.o core/core.o
-	$(CC) $(CFLAGS) test.c -o test cpu/cpu.o core/core.o
+BINDIR=bin
+OBJDIR=$(BINDIR)/obj
 
-include core/core.mk
 include cpu/cpu.mk
+include core/core.mk
+
+$(BINDIR):
+	mkdir $(BINDIR)
+$(OBJDIR): $(BINDIR)
+	mkdir -p $(OBJDIR)

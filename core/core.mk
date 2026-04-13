@@ -1,12 +1,12 @@
 DIR=core
 CORE_SOURCES = 		\
-	$(DIR)/log.o	\
-	$(DIR)/calc.o	\
+	$(OBJDIR)/log.o	\
+	$(OBJDIR)/calc.o	\
 
-$(DIR)/core.o: $(CORE_SOURCES)
-	ld --relocatable $(CORE_SOURCES) -o $(DIR)/core.o
+$(OBJDIR)/core.o: $(OBJDIR) $(CORE_SOURCES) $(OBJDIR)
+	ld --relocatable $(CORE_SOURCES) -o $(OBJDIR)/core.o
 
-$(DIR)/log.o: $(DIR)/log.c
-	$(CC) $(DIR)/log.c -c -o $(DIR)/log.o $(CFLAGS)
-$(DIR)/calc.o: $(DIR)/calc.c
-	$(CC) $(DIR)/calc.c -c -o $(DIR)/calc.o $(CFLAGS)
+$(OBJDIR)/log.o: $(DIR)/log.c $(OBJDIR)
+	$(CC) $(DIR)/log.c -c -o $(OBJDIR)/log.o $(CFLAGS)
+$(OBJDIR)/calc.o: $(DIR)/calc.c $(OBJDIR)
+	$(CC) $(DIR)/calc.c -c -o $(OBJDIR)/calc.o $(CFLAGS)
