@@ -20,7 +20,9 @@ void error(const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    __log(RED"ERROR"RESET, fmt, va);
+    printf("\n["RED"ERROR"RESET"]: ");
+    vprintf(fmt, va);
+    printf("\n");
     va_end(va);
 }
 

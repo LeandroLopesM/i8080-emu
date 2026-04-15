@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "../core/colors.h"
@@ -10,6 +11,9 @@
 #include "i8080-cc/compiler/parser/parser.h"
 
 cpu c;
+
+#include "builtins/set.c"
+#include "builtins/converters.c"
 
 int read_line(string* s)
 {
@@ -42,13 +46,23 @@ void dump(string_arr* sa)
 
     return;
 dump_usage:
-    printf(RED"+"RESET" USAGE: /dump [cpu, mem, pipe]\n| Dumps relevant information about requested object");
+    printf(RED"+"RESET" USAGE: /dump [cpu, mem, pipe]\n| Dumps relevant information about requested object\n");
 }
 
 void parse_builtin(string_arr* sa)
 {
     if (strcmp(sa->items[0].items, "/dump") == 0)
         dump(sa);
+    else if (strcmp(sa->items[0].items, "/set") == 0)
+        set(sa);
+    else if(strcmp(sa->items[0].items, "/hex") == 0)
+        hex(sa);
+    else if(strcmp(sa->items[0].items, "/dec") == 0)
+        dec(sa);
+    else if(strcmp(sa->items[0].items, "/b2d") == 0)
+        b2d(sa);
+    else if(strcmp(sa->items[0].items, "/d2b") == 0)
+        d2b(sa);
     else error("Unknown command %s", sa->items[0].items);
 }
 
@@ -57,10 +71,11 @@ int start_cli()
     memset(&c, 0, sizeof(cpu));
     string in_raw = {0};
     size_t i = 0;
+    state blank;
 
     while (1)
     {
-        printf("\n%llu> ", i++);
+        printf("%llu> ", i++);
 
         if(!read_line(&in_raw))
         {
@@ -70,5 +85,7 @@ int start_cli()
 
         if (in_raw.items[0] == '/')
             parse_builtin(tokenize(in_raw.items));
+        else
+            parse_line(&blank, in_raw.items, 0);
     }
 }

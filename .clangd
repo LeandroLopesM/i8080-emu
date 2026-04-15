@@ -2,4 +2,4 @@ If:
   PathMatch: .*\.c
 
 CompileFlags:
-    Add: [-Wall, -Wextra, -Wpedantic, -std=c23]
+    Add: [-Wall, -Wextra, -std=c23]
