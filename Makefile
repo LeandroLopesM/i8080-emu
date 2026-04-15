@@ -4,10 +4,10 @@ CFLAGS ?= -Wall -Wextra
 BINDIR=bin
 OBJDIR=$(BINDIR)/obj
 
-EMU_DEPS = 				\
-	emu.c				\
-	$(OBJDIR)/core.o	\
-	$(OBJDIR)/cpu.o		\
+EMU_DEPS = 					\
+	emu.c					\
+	$(OBJDIR)/core.o		\
+	$(OBJDIR)/cpu.o			\
 	$(OBJDIR)/cli.o
 
 $(BINDIR)/emu: $(OBJDIR) $(EMU_DEPS)

@@ -3,6 +3,8 @@
 
 #include "../../core/common.h"
 
+#ifndef INSTRUNCTION_KIND
+#define INSTRUNCTION_KIND
 enum instruction_kind {
     MOV , MVI , LXI , LDA , STA ,
     LHLD, SHLD, LDAX, STAX, XCHG,
@@ -17,6 +19,7 @@ enum instruction_kind {
     SPHL, IN  , OUT , EI  , DI  ,
     HLT , NOP
 };
+#endif // INSTRUNCTION_KIND
 
 typedef struct {
     enum instruction_kind kind;

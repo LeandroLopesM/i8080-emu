@@ -3,8 +3,8 @@
 #include "../core/colors.h"
 #include "../cpu/cpu.h"
 
-#include "external/i8080-cc/compiler/parser/util/arrays.h"
-#include "external/i8080-cc/compiler/parser/parser.h"
+#include "i8080-cc/compiler/parser/util/arrays.h"
+#include "i8080-cc/compiler/parser/parser.h"
 
 cpu c;
 
@@ -49,6 +49,6 @@ int start_cli()
         if (in_raw.items[0] == '/')
             parse_builtin(tokenize(in_raw.items));
 
-        printf("\nGot: %s", in_raw.items); 
+        printf("\nGot: %s", in_raw.items);
     }
 }

@@ -1,0 +1,3 @@
+[submodule "cli/i8080-cc"]
+	path = cli/i8080-cc
+	url = https://github.com/leandrolopesm/i8080-cc

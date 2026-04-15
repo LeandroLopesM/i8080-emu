@@ -1,8 +1,8 @@
 OBJDIR ?= bin/obj
 CFLAGS ?= -Wall -Wextra -ggdb
-CLI_DEPS = \
-	$(OBJDIR)/interface.o \
-	$(OBJDIR)/compiler.o \
+CLI_DEPS = 					\
+	$(OBJDIR)/interface.o 	\
+	$(OBJDIR)/compiler.o 	\
 
 
 $(OBJDIR)/cli.o: $(CLI_DEPS)
@@ -11,5 +11,5 @@ $(OBJDIR)/cli.o: $(CLI_DEPS)
 $(OBJDIR)/interface.o: cli/cli.c
 	$(CC) cli/cli.c -c -o $(OBJDIR)/interface.o $(CFLAGS)
 
-CC_DIR=cli/external/i8080-cc/compiler
-include cli/external/i8080-cc/compiler/compiler.mk
+CC_DIR=cli/i8080-cc/compiler
+include cli/i8080-cc/compiler/compiler.mk

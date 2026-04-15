@@ -3,8 +3,9 @@
 #include "cpu/cpu.h"
 #include "cpu/decode/decode.h"
 
-int main(int argc)
+int main(int argc, char** argv)
 {
+    (void)(argv);
     if (argc == 1)
-        return start_cli();    
+        return start_cli();
 }

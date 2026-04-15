@@ -1,11 +1,11 @@
-SOURCES = 				\
-	$(OBJDIR)/resolve.o	\
-	$(OBJDIR)/debug.o	\
-	$(OBJDIR)/decode.o	\
-	$(OBJDIR)/exec.o	\
+CPU_SOURCES = 				\
+	$(OBJDIR)/resolve.o		\
+	$(OBJDIR)/debug.o		\
+	$(OBJDIR)/decode.o		\
+	$(OBJDIR)/exec.o		\
 
-$(OBJDIR)/cpu.o: $(SOURCES)
-	ld $(SOURCES) --relocatable -o $(OBJDIR)/cpu.o
+$(OBJDIR)/cpu.o: $(CPU_SOURCES)
+	ld $(CPU_SOURCES) --relocatable -o $(OBJDIR)/cpu.o
 
 $(OBJDIR)/resolve.o: cpu/decode/resolve.c
 	$(CC) cpu/decode/resolve.c -c -o $(OBJDIR)/resolve.o $(CFLAGS)
