@@ -145,6 +145,9 @@ int start_cli()
             return 1;
         }
 
+        if (in_raw.len <= 1)
+            continue;
+
         if (in_raw.items[0] == '/')
             parse_builtin(tokenize(in_raw.items));
         else
@@ -162,22 +165,22 @@ int start_cli()
 
             byte b = encode(&cu);
 
-            if (cu.opA)
-                c.memory[0] = b;
-            if (cu.opB)
-                c.memory[1] = *cu.opB;
-
-
-
             if (b == 0)
                 continue;
-            instruction *i = decode(&c, -1, 0);
 
-            debug("OC: %s\n", b2s(i->opcode));
+            c.memory[0] = b;
+            if (*cu.opA != 0)
+                c.memory[1] = *cu.opA;
+            if (*cu.opB != 0)
+                c.memory[2] = *cu.opB;
+
+            instruction *i = decode(&c, -1, 0);
 
             cpu copy = c;
             exec(&c, i);
             compare(copy, c);
+
+            printf(GREEN"\nSuccess"RESET);
         }
     }
 }

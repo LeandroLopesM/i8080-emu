@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define BITMASK(orig, mask) \
-    (((orig) & (mask)) == (mask))
+    (((orig) & (~(mask))) == (orig))
 
 static instruction* out = NULL;
 static byte opcode = 0;
