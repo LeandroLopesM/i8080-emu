@@ -117,7 +117,7 @@ const char* b2s(byte n)
     static char out[9];
     int i = 0;
 
-    while (n && i != 8) {
+    while (n && i != 9) {
         if (n & 1)
             out[i++] = '1';
         else
@@ -160,19 +160,22 @@ int start_cli()
                 cu.opB? *cu.opB : 0,
                 cu.opC? *cu.opC : 0));
 
+            byte b = encode(&cu);
+
+            if (b == 0)
+                continue;
             instruction i = {
                 .kind = cu.type,
-                .opcode = encode(&cu),
+                .opcode = b,
                 .opA = cu.opA,
                 .opB = cu.opB
             };
 
-            // cpu copy = c;
-            // exec(&c, &i);
-
             debug("OC: %s\n", b2s(i.opcode));
 
-            // compare(copy, c);
+            cpu copy = c;
+            exec(&c, &i);
+            compare(copy, c);
         }
     }
 }
