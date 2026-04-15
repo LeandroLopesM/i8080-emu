@@ -8,7 +8,7 @@
 
 static void __log(char* prefix, const char* fmt, va_list *va)
 {
-    printf("\n[%5s]: ", prefix);
+    printf("\n[%5s] ", prefix);
     vprintf( fmt, *va);
 }
 
