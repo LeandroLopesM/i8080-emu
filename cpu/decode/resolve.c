@@ -14,7 +14,7 @@ byte* resolve(cpu* c, byte selector)
     case 0b110: return &c->memory[c->rgf.HL];
     }
 
-    panic_ext(c, "Invalid register selector %#x", selector);
+    error("Invalid register selector %#x\n", selector);
     return 00; // unreachable
 }
 
@@ -28,7 +28,7 @@ byte* resolve_rp(cpu* c, byte selector)
     case 0b11: return (byte*)&c->rgf.SP; //   (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
     }
 
-    panic_ext(c, "Invalid register selector %#x", selector);
+    error("Invalid register selector %#x\n", selector);
     return 00; // unreachable
 }
 
@@ -39,7 +39,7 @@ byte* resolve_rp_xx(cpu* c, byte selector)
     case 0b01: return (byte*)&c->rgf.DE;
     }
 
-    panic_ext(c, "Invalid register selector %#x", selector);
+    error("Invalid register selector %#x\n", selector);
     return 00; // unreachable
 }
 
@@ -52,7 +52,7 @@ byte* resolve_stack_rp(cpu* c, byte selector)
     case 0b11: return (byte*)&c->rgf.PSW; //   (Stack pointer, refers to PSW (FLAGS:A) for PUSH/POP)
     }
 
-    panic_ext(c, "Invalid register selector %#x", selector);
+    error("Invalid register selector %#x\n", selector);
     return 00; // unreachable
 }
 

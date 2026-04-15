@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../core/colors.h"
 #include "../core/log/log.h"
+#include "../cpu/decode/decode.h"
 #include "../cpu/cpu.h"
 #include "../cpu/debug/debug.h"
 
@@ -10,7 +11,6 @@
 #include "i8080-cc/compiler/encoder/encoder.h"
 #include "i8080-cc/compiler/parser/parser.h"
 
-#include "../cpu/decode/decode.h"
 #include "i8080-cc/core/common.h"
 cpu c;
 
@@ -162,19 +162,21 @@ int start_cli()
 
             byte b = encode(&cu);
 
+            if (cu.opA)
+                c.memory[0] = b;
+            if (cu.opB)
+                c.memory[1] = *cu.opB;
+
+
+
             if (b == 0)
                 continue;
-            instruction i = {
-                .kind = cu.type,
-                .opcode = b,
-                .opA = cu.opA,
-                .opB = cu.opB
-            };
+            instruction *i = decode(&c, -1, 0);
 
-            debug("OC: %s\n", b2s(i.opcode));
+            debug("OC: %s\n", b2s(i->opcode));
 
             cpu copy = c;
-            exec(&c, &i);
+            exec(&c, i);
             compare(copy, c);
         }
     }

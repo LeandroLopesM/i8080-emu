@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern jmp_buf err_sink;
+
 static void __log(char* prefix, const char* fmt, va_list *va)
 {
     printf("\n[%5s] ", prefix);
@@ -18,6 +20,8 @@ void error(const char* fmt, ...)
     va_start(va, fmt);
     __log(RED"ERROR"RESET, fmt, &va);
     va_end(va);
+
+    longjmp(err_sink, 1);
 }
 
 void warn(const char* fmt, ...)
