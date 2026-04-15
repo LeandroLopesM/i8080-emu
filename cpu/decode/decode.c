@@ -1,12 +1,10 @@
 #include "../../core/log/log.h"
+#include "../../core/bitcmp.h"
 #include "decode.h"
 #include "masks.h"
 #include "resolve.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#define BITMASK(orig, mask) \
-    (((orig) & (~(mask))) == (orig))
 
 static instruction* out = NULL;
 static byte opcode = 0;
@@ -60,285 +58,285 @@ instruction *decode(cpu* c, int mempos, size_t tick)
 
     out->opcode = opcode;
 
-    if (BITMASK(opcode, m_MOV)) {
+    if (is_eq(opcode, m_MOV)) {
         out->kind = MOV;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
     }
-    else if (BITMASK(opcode, m_MVI)) {
+    else if (is_eq(opcode, m_MVI)) {
         out->kind = MVI;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = &c->memory[(*truepos)++];
     }
-    else if (BITMASK(opcode, m_LXI)) {
+    else if (is_eq(opcode, m_LXI)) {
         out->kind = LXI;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
-    else if (BITMASK(opcode, m_LDA)) {
+    else if (is_eq(opcode, m_LDA)) {
         out->kind = LDA;
         out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_STA)) {
+    else if (is_eq(opcode, m_STA)) {
         out->kind = STA;
         out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_LHLD)) {
+    else if (is_eq(opcode, m_LHLD)) {
         out->kind = LHLD;
         out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SHLD)) {
+    else if (is_eq(opcode, m_SHLD)) {
         out->kind = SHLD;
         out->opA = &c->memory[(*truepos)++]; (*truepos)++;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_LDAX)) {
+    else if (is_eq(opcode, m_LDAX)) {
         out->kind = LDAX;
         out->opA = resolve_rp_xx(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_STAX)) {
+    else if (is_eq(opcode, m_STAX)) {
         out->kind = STAX;
         out->opA = resolve_rp_xx(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_XCHG)) {
+    else if (is_eq(opcode, m_XCHG)) {
         out->kind = XCHG;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ADD)) {
+    else if (is_eq(opcode, m_ADD)) {
         out->kind = ADD;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ADI)) {
+    else if (is_eq(opcode, m_ADI)) {
         out->kind = ADI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ADC)) {
+    else if (is_eq(opcode, m_ADC)) {
         out->kind = ADC;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ACI)) {
+    else if (is_eq(opcode, m_ACI)) {
         out->kind = ACI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SUB)) {
+    else if (is_eq(opcode, m_SUB)) {
         out->kind = SUB;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SUI)) {
+    else if (is_eq(opcode, m_SUI)) {
         out->kind = SUI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SBB)) {
+    else if (is_eq(opcode, m_SBB)) {
         out->kind = SBB;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SBI)) {
+    else if (is_eq(opcode, m_SBI)) {
         out->kind = SBI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_INR)) {
+    else if (is_eq(opcode, m_INR)) {
         out->kind = INR;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_DCR)) {
+    else if (is_eq(opcode, m_DCR)) {
         out->kind = DCR;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_INX)) {
+    else if (is_eq(opcode, m_INX)) {
         out->kind = INX;
         out->opA = resolve_rp(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_DCX)) {
+    else if (is_eq(opcode, m_DCX)) {
         out->kind = DCX;
         out->opA = resolve_rp(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_DAD)) {
+    else if (is_eq(opcode, m_DAD)) {
         out->kind = DAD;
         out->opA = resolve_rp(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_DAA)) {
+    else if (is_eq(opcode, m_DAA)) {
         out->kind = DAA;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ANA)) {
+    else if (is_eq(opcode, m_ANA)) {
         out->kind = ANA;
         out->opA = resolve(c, (byte)((opcode & DF_RP_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ANI)) {
+    else if (is_eq(opcode, m_ANI)) {
         out->kind = ANI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ORA)) {
+    else if (is_eq(opcode, m_ORA)) {
         out->kind = ORA;
         out->opA = resolve(c, (byte)((opcode & DF_RP_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_ORI)) {
+    else if (is_eq(opcode, m_ORI)) {
         out->kind = ORI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_XRA)) {
+    else if (is_eq(opcode, m_XRA)) {
         out->kind = XRA;
         out->opA = resolve(c, (byte)((opcode & DF_RP_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_XRI)) {
+    else if (is_eq(opcode, m_XRI)) {
         out->kind = XRI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_CMP)) {
+    else if (is_eq(opcode, m_CMP)) {
         out->kind = CMP;
         out->opA = resolve(c, (byte)((opcode & DF_REG_MASK) >> 0));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_CPI)) {
+    else if (is_eq(opcode, m_CPI)) {
         out->kind = CPI;
         out->opA = &c->memory[(*truepos)++];
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, DF_REG_MASK)) {
+    else if (is_eq(opcode, m_RLC)) {
         out->kind = RLC;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_RRC)) {
+    else if (is_eq(opcode, m_RRC)) {
         out->kind = RRC;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_RAL)) {
+    else if (is_eq(opcode, m_RAL)) {
         out->kind = RAL;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_RAR)) {
+    else if (is_eq(opcode, m_RAR)) {
         out->kind = RAR;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_CMA)) {
+    else if (is_eq(opcode, m_CMA)) {
         out->kind = CMA;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_CMC)) {
+    else if (is_eq(opcode, m_CMC)) {
         out->kind = CMC;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_STC)) {
+    else if (is_eq(opcode, m_STC)) {
         out->kind = STC;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_JMP)) {
+    else if (is_eq(opcode, m_JMP)) {
         out->kind = JMP;
         out->opA = &c->memory[(*truepos)++];
         out->opB = &c->memory[(*truepos)++];
     }
-    else if (BITMASK(opcode, m_Jccc)) {
+    else if (is_eq(opcode, m_Jccc)) {
         out->kind = Jccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
-    else if (BITMASK(opcode, m_CALL)) {
+    else if (is_eq(opcode, m_CALL)) {
         out->kind = CALL;
         out->opA = &c->memory[(*truepos)++];
         out->opB = &c->memory[(*truepos)++];
     }
-    else if (BITMASK(opcode, m_Cccc)) {
+    else if (is_eq(opcode, m_Cccc)) {
         out->kind = Cccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = &c->memory[(*truepos)++]; (*truepos)++;
     }
-    else if (BITMASK(opcode, m_RET)) {
+    else if (is_eq(opcode, m_RET)) {
         out->kind = RET;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_Rccc)) {
+    else if (is_eq(opcode, m_Rccc)) {
         out->kind = Rccc;
         out->opA = (byte*)resolve_condition((byte)((opcode & DF_REG_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_RST)) {
+    else if (is_eq(opcode, m_RST)) {
         panic_ext(c, "RST: Not sure what this is supposed to be");
     }
-    else if (BITMASK(opcode, m_PCHL)) {
+    else if (is_eq(opcode, m_PCHL)) {
         out->kind = PCHL;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_PUSH)) {
+    else if (is_eq(opcode, m_PUSH)) {
         out->kind = PUSH;
         out->opA = resolve_stack_rp(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_POP)) {
+    else if (is_eq(opcode, m_POP)) {
         out->kind = POP;
         out->opA = resolve_stack_rp(c, (byte)((opcode & DF_RP_MASK) >> 3));
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_XTHL)) {
+    else if (is_eq(opcode, m_XTHL)) {
         out->kind = XTHL;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_SPHL)) {
+    else if (is_eq(opcode, m_SPHL)) {
         out->kind = SPHL;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_IN)) {
+    else if (is_eq(opcode, m_IN)) {
         out->kind = IN;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_OUT)) {
+    else if (is_eq(opcode, m_OUT)) {
         out->kind = OUT;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_EI)) {
+    else if (is_eq(opcode, m_EI)) {
         out->kind = EI;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_DI)) {
+    else if (is_eq(opcode, m_DI)) {
         out->kind = DI;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_HLT)) {
+    else if (is_eq(opcode, m_HLT)) {
         out->kind = HLT;
         out->opA = NULL;
         out->opB = NULL;
     }
-    else if (BITMASK(opcode, m_NOP)) {
+    else if (is_eq(opcode, m_NOP)) {
         out->kind = NOP;
         out->opA = NULL;
         out->opB = NULL;

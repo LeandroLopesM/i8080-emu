@@ -37,18 +37,22 @@ int read_line(string* s)
 void dump(string_arr* sa)
 {
     if (sa->len != 2)
-        goto dump_usage;
+        goto dump_all;
     else if (strcmp(sa->items[1].items, "cpu") == 0)
         dump_registers(&c);
     else if (strcmp(sa->items[1].items, "mem") == 0)
         dump_memory(&c);
     else if (strcmp(sa->items[1].items, "pipe") == 0)
         dump_decoder();
-    else goto dump_usage;
+    else goto dump_all;
 
-    return;
-dump_usage:
-    printf(RED"+"RESET" USAGE: /dump [cpu, mem, pipe]\n| Dumps relevant information about requested object\n");
+dump_all:
+    {
+        printf(BLUE"Dumping everything\n"RESET);
+        dump_registers(&c);
+        dump_memory(&c);
+        dump_decoder();
+    }
 }
 
 void parse_builtin(string_arr* sa)
@@ -181,6 +185,7 @@ int start_cli()
             compare(copy, c);
 
             printf("\n+ "GREEN"Success"RESET);
+            c.rgf.PC = 0;
         }
     }
 }
