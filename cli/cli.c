@@ -134,7 +134,7 @@ int start_cli()
             int ff = 0;
             comp_unit cu = parse_line(in_raw.items, &ff);
             if (ff)
-                goto after;
+                continue;
             printf("\n+ CompUnit:\n| Instr %d\n", cu.type);
             // byte opcode = encode(cu);
 
@@ -142,7 +142,6 @@ int start_cli()
             // exec(&c, (instruction *)&cu);
 
             // compare(copy, c);
-after:
         }
     }
 }

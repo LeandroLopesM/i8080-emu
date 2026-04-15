@@ -13,11 +13,12 @@ EMU_DEPS = 					\
 $(BINDIR)/emu: $(OBJDIR) $(EMU_DEPS)
 	$(CC) $(EMU_DEPS) -o $(BINDIR)/emu $(CFLAGS)
 
-ifdef VERBOSE
-CFLAGS+=-DVERBOSE=1
-endif
 ifdef DEBUG
 CFLAGS+=-ggdb -DDEBUG=1
+VERBOSE=1
+endif
+ifdef VERBOSE
+CFLAGS+=-DVERBOSE=1
 endif
 
 include cli/cli.mk
