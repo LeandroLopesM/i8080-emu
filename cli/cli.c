@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "../core/colors.h"
+#include "../core/log.h"
 #include "../cpu/cpu.h"
+#include "../cpu/decode/decode.h"
+#include "../cpu/debug/debug.h"
 
 #include "i8080-cc/compiler/parser/util/arrays.h"
 #include "i8080-cc/compiler/parser/parser.h"
@@ -25,9 +28,28 @@ int read_line(string* s)
     return 1;
 }
 
+void dump(string_arr* sa)
+{
+    if (sa->len != 2)
+        goto dump_usage;
+    else if (strcmp(sa->items[1].items, "cpu") == 0)
+        dump_registers(&c);
+    else if (strcmp(sa->items[1].items, "mem") == 0)
+        dump_memory(&c);
+    else if (strcmp(sa->items[1].items, "pipe") == 0)
+        dump_decoder();
+    else goto dump_usage;
+
+    return;
+dump_usage:
+    printf(RED"+"RESET" USAGE: /dump [cpu, mem, pipe]\n| Dumps relevant information about requested object");
+}
+
 void parse_builtin(string_arr* sa)
 {
-
+    if (strcmp(sa->items[0].items, "/dump") == 0)
+        dump(sa);
+    else error("Unknown command %s", sa->items[0].items);
 }
 
 int start_cli()
@@ -48,7 +70,5 @@ int start_cli()
 
         if (in_raw.items[0] == '/')
             parse_builtin(tokenize(in_raw.items));
-
-        printf("\nGot: %s", in_raw.items);
     }
 }
