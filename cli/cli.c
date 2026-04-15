@@ -71,45 +71,45 @@ void parse_builtin(string_arr* sa)
 void compare(cpu before, cpu after)
 {
     if (before.rgf.SP != after.rgf.SP)
-        printf("SP %d -> %d", before.rgf.SP, after.rgf.SP);
+        printf("SP %d -> %d\n", before.rgf.SP, after.rgf.SP);
     if (before.rgf.PC != after.rgf.PC)
-        printf("PC %d -> %d", before.rgf.PC, after.rgf.PC);
+        printf("PC %d -> %d\n", before.rgf.PC, after.rgf.PC);
 
     if (before.rgf.A != after.rgf.A)
-        printf("A %d -> %d", before.rgf.A, after.rgf.A);
+        printf("A %d -> %d\n", before.rgf.A, after.rgf.A);
     if (before.rgf.S != after.rgf.S)
-        printf("S %d -> %d", before.rgf.S, after.rgf.S);
+        printf("S %d -> %d\n", before.rgf.S, after.rgf.S);
     if (before.rgf.Z != after.rgf.Z)
-        printf("Z %d -> %d", before.rgf.Z, after.rgf.Z);
+        printf("Z %d -> %d\n", before.rgf.Z, after.rgf.Z);
     if (before.rgf.I != after.rgf.I)
-        printf("I %d -> %d", before.rgf.I, after.rgf.I);
+        printf("I %d -> %d\n", before.rgf.I, after.rgf.I);
     if (before.rgf.P != after.rgf.P)
-        printf("P %d -> %d", before.rgf.P, after.rgf.P);
+        printf("P %d -> %d\n", before.rgf.P, after.rgf.P);
     if (before.rgf.CY != after.rgf.CY)
-        printf("CY %d -> %d", before.rgf.CY, after.rgf.CY);
+        printf("CY %d -> %d\n", before.rgf.CY, after.rgf.CY);
     if (before.rgf.AC != after.rgf.AC)
-        printf("AC %d -> %d", before.rgf.AC, after.rgf.AC);
+        printf("AC %d -> %d\n", before.rgf.AC, after.rgf.AC);
 
     if (before.rgf.D  != after.rgf.D )
-        printf("D %d -> %d", before.rgf.D, after.rgf.D);
+        printf("D %d -> %d\n", before.rgf.D, after.rgf.D);
     if (before.rgf.E  != after.rgf.E )
-        printf("E %d -> %d", before.rgf.E, after.rgf.E);
+        printf("E %d -> %d\n", before.rgf.E, after.rgf.E);
     if (before.rgf.DE != after.rgf.DE)
-        printf("DE %d -> %d", before.rgf.DE, after.rgf.DE);
+        printf("DE %d -> %d\n", before.rgf.DE, after.rgf.DE);
 
     if (before.rgf.B  != after.rgf.B)
-        printf("B %d -> %d", before.rgf.B, after.rgf.B);
+        printf("B %d -> %d\n", before.rgf.B, after.rgf.B);
     if (before.rgf.C  != after.rgf.C)
-        printf("C %d -> %d", before.rgf.C, after.rgf.C);
+        printf("C %d -> %d\n", before.rgf.C, after.rgf.C);
     if (before.rgf.BC != after.rgf.BC)
-        printf("BC %d -> %d", before.rgf.BC, after.rgf.BC);
+        printf("BC %d -> %d\n", before.rgf.BC, after.rgf.BC);
 
     if (before.rgf.H  != after.rgf.H)
-        printf("H %d -> %d", before.rgf.H, after.rgf.H);
+        printf("H %d -> %d\n", before.rgf.H, after.rgf.H);
     if (before.rgf.L  != after.rgf.L)
-        printf("L %d -> %d", before.rgf.L, after.rgf.L);
+        printf("L %d -> %d\n", before.rgf.L, after.rgf.L);
     if (before.rgf.HL != after.rgf.HL)
-        printf("HL %d -> %d", before.rgf.HL, after.rgf.HL);
+        printf("HL %d -> %d\n", before.rgf.HL, after.rgf.HL);
 }
 
 const char* b2s(byte n)
@@ -180,7 +180,7 @@ int start_cli()
             exec(&c, i);
             compare(copy, c);
 
-            printf(GREEN"\nSuccess"RESET);
+            printf("\n+ "GREEN"Success"RESET);
         }
     }
 }
