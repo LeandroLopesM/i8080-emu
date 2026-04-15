@@ -135,7 +135,7 @@ int start_cli()
             comp_unit cu = parse_line(in_raw.items, &ff);
             if (ff)
                 continue;
-            printf("+ CompUnit:\n| Instr %d", cu.type);
+            printf("\n+ CompUnit:\n| Instr %d\n", cu.type);
             // byte opcode = encode(cu);
 
             // cpu copy = c;
