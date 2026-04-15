@@ -10,7 +10,6 @@ static void __log(char* prefix, const char* fmt, va_list *va)
 {
     printf("[%5s]: ", prefix);
     vprintf( fmt, *va);
-    printf("\n");
 }
 
 void error(const char* fmt, ...)
