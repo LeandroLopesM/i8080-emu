@@ -6,23 +6,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void __log(char* prefix, const char* fmt, ...)
+static void __log(char* prefix, const char* fmt, va_list *va)
 {
-    va_list va;
-    va_start(va, fmt);
     printf("[%5s]: ", prefix);
-    vprintf( fmt, va);
+    vprintf( fmt, *va);
     printf("\n");
-    va_end(va);
 }
 
 void error(const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    printf("\n["RED"ERROR"RESET"]: ");
-    vprintf(fmt, va);
-    printf("\n");
+    __log(RED"ERROR"RESET, fmt, &va);
     va_end(va);
 }
 
@@ -30,7 +25,7 @@ void warn(const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    __log(YELLOW"WARN"RESET, fmt, va);
+    __log(YELLOW"WARN"RESET, fmt, &va);
     va_end(va);
 }
 
@@ -38,7 +33,7 @@ void debug(const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    __log(BLUE"DEBUG"RESET, fmt, va);
+    __log(BLUE"DEBUG"RESET, fmt, &va);
     va_end(va);
 }
 
@@ -47,9 +42,7 @@ static void __panic(int die, const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    printf("["BG_RED"PANIC"RESET"] : ");
-    vprintf(fmt, va);
-    printf("\n");
+    __log(BG_RED"PANIC"RESET, fmt, &va);
     va_end(va);
 
     if (die) exit(1);
