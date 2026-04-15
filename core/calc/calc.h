@@ -1,8 +1,8 @@
 #ifndef CALC_H
 #define CALC_H
 
-#include "common.h"
-#include "../cpu/cpu.h"
+#include "../common.h"
+#include "../../cpu/cpu.h"
 
 byte add_b(cpu* c, byte lhs, byte rhs);
 byte add_carry_b(cpu* c, byte lhs, byte rhs);

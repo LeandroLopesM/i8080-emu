@@ -1,6 +1,6 @@
 #include "calc.h"
-#include "common.h"
-#include "log.h"
+#include "../common.h"
+#include "../log/log.h"
 #include <stdint.h>
 
 static byte well;

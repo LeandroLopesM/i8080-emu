@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../core/colors.h"
-#include "../core/log.h"
+#include "../core/log/log.h"
 #include "../cpu/cpu.h"
 #include "../cpu/debug/debug.h"
 
@@ -116,7 +116,6 @@ int start_cli()
     memset(&c, 0, sizeof(cpu));
     string in_raw = {0};
     size_t i = 0;
-    state blank;
 
     while (1)
     {
@@ -132,7 +131,10 @@ int start_cli()
             parse_builtin(tokenize(in_raw.items));
         else
         {
-            comp_unit cu = parse_line(&blank, in_raw.items, 0);
+            int ff;
+            comp_unit cu = parse_line(in_raw.items, &ff);
+            if (ff)
+                continue;
             printf("+ CompUnit:\n| Instr %d", cu.type);
             // byte opcode = encode(cu);
 

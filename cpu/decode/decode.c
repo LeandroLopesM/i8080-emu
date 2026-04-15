@@ -1,4 +1,4 @@
-#include "../../core/log.h"
+#include "../../core/log/log.h"
 #include "decode.h"
 #include "masks.h"
 #include "resolve.h"

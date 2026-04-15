@@ -1,4 +1,4 @@
-#include "../../core/log.h"
+#include "../../core/log/log.h"
 #include "resolve.h"
 
 byte* resolve(cpu* c, byte selector)

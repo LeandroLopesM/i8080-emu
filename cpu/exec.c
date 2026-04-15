@@ -1,7 +1,6 @@
-#include "decode/decode.h"
 #include "../core/common.h"
-#include "../core/log.h"
-#include "../core/calc.h"
+#include "../core/log/log.h"
+#include "../core/calc/calc.h"
 #include "cpu.h"
 
 #define WORD(b) \

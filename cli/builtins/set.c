@@ -1,5 +1,5 @@
 #include "../../core/colors.h"
-#include "../../core/log.h"
+#include "../../core/log/log.h"
 
 #include "../i8080-cc/compiler/parser/util/arrays.h"
 #include <stdio.h>

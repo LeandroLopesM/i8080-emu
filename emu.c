@@ -1,5 +1,5 @@
 #include "cli/cli.h"
-#include "core/log.h"
+#include "core/log/log.h"
 #include "cpu/cpu.h"
 #include "cpu/decode/decode.h"
 

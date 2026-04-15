@@ -1,7 +1,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include "../cpu/cpu.h"
+#include "../../cpu/cpu.h"
 
 #ifdef VERBOSE
 #define WHEN_VERBOSE(...) __VA_ARGS__

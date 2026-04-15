@@ -1,7 +1,7 @@
-#include "../cpu/decode/decode.h"
-#include "../cpu/debug/debug.h"
-#include "../cpu/cpu.h"
-#include "colors.h"
+#include "../../cpu/decode/decode.h"
+#include "../../cpu/debug/debug.h"
+#include "../../cpu/cpu.h"
+#include "../colors.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
